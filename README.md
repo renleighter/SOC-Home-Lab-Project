@@ -25,3 +25,24 @@ Bu proje, kurumsal bir ağ ortamındaki saldırı vektörlerini tespit etmek, si
 
 ## 📸 Ekran Görüntüleri ve Analiz Raporları
 *(Laboratuvar kurulumu tamamlandıkça SIEM paneli ve log ekran görüntüleri buraya eklenecektir.)*  
+---
+
+### 🟢 Tamamlanan Faz 1: Sysmon & Wazuh Telemetri Entegrasyonu
+
+Windows 10 kurban makinesindeki Sysmon loglarının (`Microsoft-Windows-Sysmon/Operational`) Wazuh SIEM ortamına aktarılması için ajan konfigürasyonu tamamlanmıştır.
+
+#### 🛠️ Uygulanan Ajan Konfigürasyonu (`ossec.conf`)
+```xml
+<ossec_config>
+  <client>
+    <server>
+      <address>192.168.42.130</address>
+      <port>1514</port>
+      <protocol>tcp</protocol>
+    </server>
+  </client>
+  <localfile>
+    <location>Microsoft-Windows-Sysmon/Operational</location>
+    <log_format>eventchannel</log_format>
+  </localfile>
+</ossec_config>
