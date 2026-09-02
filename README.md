@@ -46,3 +46,53 @@ Windows 10 kurban makinesindeki Sysmon loglarının (`Microsoft-Windows-Sysmon/O
     <log_format>eventchannel</log_format>
   </localfile>
 </ossec_config>
+
+## 🟢 Tamamlanan Faz 2: Özel Tespit Kuralları (Custom Rules) ve Otomatik Müdahale (Active Response)
+
+Sysmon ve Wazuh entegrasyonunun ardından, varsayılan kuralların yakalayamadığı gelişmiş saldırı vektörleri için özel tespit kuralları yazılmış ve tespit anında otomatik müdahale (containment) sağlayan Active Response mekanizması devreye alınmıştır.
+
+### 🎯 Yapılandırılan Özel Kurallar (`local_rules.xml`)
+
+MITRE ATT&CK çerçevesiyle eşleştirilmiş ve `/var/ossec/etc/rules/local_rules.xml` dosyasına eklenmiş kurallar:
+
+| Kural ID | Saldırı Senaryosu | Mantık / Regex Şablonu | MITRE Taktik | MITRE Teknik ID |
+| :--- | :--- | :--- | :--- | :--- |
+| **`100002`** | Execution Policy Bypass | `-ExecutionPolicy Bypass` / `-ep bypass` | Defense Evasion | `T1059.001` (PowerShell) |
+| **`100003`** | Zararlı Kod İndirme / Parola Sızdırma | `DownloadString`, `sekurlsa`, `lsadump`, `mimikatz` | Credential Access / Execution | `T1003` / `T1105` |
+| **`100004`** | Zamanlanmış Görev ile Kalıcılık | `schtasks /create`, `HKCU\...\Run` | Persistence | `T1053.005` / `T1547.001` |
+
+#### Uygulanan Kural Konfigürasyonu (`local_rules.xml`)
+```xml
+<group name="sysmon,powershell,custom_rules">
+
+  <!-- Kural 100002: Execution Policy Bypass -->
+  <rule id="100002" level="8">
+    <if_sid>61600</if_sid>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)-ExecutionPolicy\s+Bypass|-ep\s+bypass</field>
+    <description>Suspicious PowerShell Execution Policy Bypass Detected</description>
+    <mitre><id>T1059.001</id></mitre>
+  </rule>
+
+  <!-- Kural 100003: Credential Dumping / Fileless Malware -->
+  <rule id="100003" level="10">
+    <if_sid>61600</if_sid>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)DownloadString|sekurlsa|lsadump|mimikatz</field>
+    <description>Suspicious Process Execution: Credential Access / Download Attempt</description>
+    <mitre>
+      <id>T1003</id>
+      <id>T1105</id>
+    </mitre>
+  </rule>
+
+  <!-- Kural 100004: Persistence Execution -->
+  <rule id="100004" level="8">
+    <if_sid>61600</if_sid>
+    <field name="win.eventdata.commandLine" type="pcre2">(?i)schtasks\s+/create|reg\s+add.*\\run</field>
+    <description>Suspicious Persistence Mechanism Created via CLI</description>
+    <mitre>
+      <id>T1053.005</id>
+      <id>T1547.001</id>
+    </mitre>
+  </rule>
+
+</group>
