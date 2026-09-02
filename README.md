@@ -51,7 +51,8 @@ Wazuh SIEM ortamına aktarılması için ajan konfigürasyonu tamamlanmıştır.
 
 ## 🟢 Tamamlanan Faz 2: Özel Tespit Kuralları (Custom Rules) ve Otomatik Müdahale (Active Response)
 
-Sysmon ve Wazuh entegrasyonunun ardından, varsayılan kuralların yakalayamadığı gelişmiş saldırı vektörleri için özel tespit kuralları yazılmış ve tespit anında otomatik müdahale (containment) sağlayan Active Response mekanizması devreye alınmıştır.
+Sysmon ve Wazuh entegrasyonunun ardından, varsayılan kuralların yakalayamadığı gelişmiş saldırı vektörleri için
+ özel tespit kuralları yazılmış ve tespit anında otomatik müdahale (containment) sağlayan Active Response mekanizması devreye alınmıştır.
 
 ### 🎯 Yapılandırılan Özel Kurallar (`local_rules.xml`)
 
@@ -105,7 +106,8 @@ MITRE ATT&CK çerçevesiyle eşleştirilmiş ve `/var/ossec/etc/rules/local_rule
 Zararlı kod çalıştırma girişimi tespit edildiğinde insan müdahalesi beklenmeden uç noktada sürecin kesilmesi sağlanmıştır.
 
 Mühendislik & Analiz Notu (Kısıtların Çözümü):
-Kaynak IP Bağımlılığı (srcip): host-deny veya güvenlik duvarı engellemeleri log içinde srcip (Kaynak IP) bilgisine ihtiyaç duyar. Süreç oluşturma (Sysmon Event ID 1) loglarında IP bilgisi bulunmadığı için komut satırı tetiklemelerinde uç nokta servis müdahalesi tercih edilmiştir.
+Kaynak IP Bağımlılığı (srcip): host-deny veya güvenlik duvarı engellemeleri log içinde srcip (Kaynak IP) bilgisine ihtiyaç duyar.
+Süreç oluşturma (Sysmon Event ID 1) loglarında IP bilgisi bulunmadığı için komut satırı tetiklemelerinde uç nokta servis müdahalesi tercih edilmiştir.
 
 İşletim Sistemi Betik Uyumluluğu: Windows uç noktalarında Linux kabuk betikleri (.sh) çalışmayacağı için Windows'a özel derlenmiş .exe executable araçları (restart-wazuh.exe) aktif edilmiştir.
 
