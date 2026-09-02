@@ -2,7 +2,8 @@
 # 🛡️ Enterprise Home SOC & Telemetry Detection Lab
 
 ## 📌 Proje Özeti
-Bu proje, kurumsal bir ağ ortamındaki saldırı vektörlerini tespit etmek, sistem telemetrisini (loglarını) toplamak ve SIEM paneli üzerinde analiz etmek amacıyla oluşturulmuş canlı bir Mavi Takım (Blue Team) laboratuvarıdır.
+Bu proje, kurumsal bir ağ ortamındaki saldırı vektörlerini tespit etmek, sistem telemetrisini (loglarını) toplamak ve
+SIEM paneli üzerinde analiz etmek amacıyla oluşturulmuş canlı bir Mavi Takım (Blue Team) laboratuvarıdır.
 
 ## 📐 Ağ ve Sistem Mimarisi
 - **Kurban Makine (Target):** Windows 10/11 Enterprise (Sysmon Entegreli)
@@ -29,7 +30,8 @@ Bu proje, kurumsal bir ağ ortamındaki saldırı vektörlerini tespit etmek, si
 
 ### 🟢 Tamamlanan Faz 1: Sysmon & Wazuh Telemetri Entegrasyonu
 
-Windows 10 kurban makinesindeki Sysmon loglarının (`Microsoft-Windows-Sysmon/Operational`) Wazuh SIEM ortamına aktarılması için ajan konfigürasyonu tamamlanmıştır.
+Windows 10 kurban makinesindeki Sysmon loglarının (`Microsoft-Windows-Sysmon/Operational`)
+Wazuh SIEM ortamına aktarılması için ajan konfigürasyonu tamamlanmıştır.
 
 #### 🛠️ Uygulanan Ajan Konfigürasyonu (`ossec.conf`)
 ```xml
